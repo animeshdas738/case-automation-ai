@@ -1,0 +1,47 @@
+@startuml
+title Case Automation: AI Summarization & Auto-Response Architecture
+
+package "Salesforce" {
+  [Case Record]
+  [Apex Trigger / Platform Event]
+  [LWC on Case Page]
+  [Named Credential / External Callout]
+}
+
+package "Ingress" {
+  [API Gateway / Endpoint]
+}
+
+package "AI Backend" {
+  [Preprocessor]\n(redact, truncate)
+  [LLM Provider]\n(OpenAI / Anthropic / Private)
+  [Postprocessor]\n(schema validation, scoring)
+  [Result Store]\n(DB / S3)
+}
+
+package "Queueing" {
+  [Message Queue]\n(SQS / PubSub)
+  [Retry / Dead-letter]
+}
+
+package "Monitoring" {
+  [Metrics & Alerts]
+  [Audit Logs]
+}
+
+' flows
+[Case Record] --> [Apex Trigger / Platform Event]
+[Apex Trigger / Platform Event] --> [Named Credential / External Callout]
+[Named Credential / External Callout] --> [API Gateway / Endpoint]
+[API Gateway / Endpoint] --> [Preprocessor]
+[Preprocessor] --> [LLM Provider]
+[LLM Provider] --> [Postprocessor]
+[Postprocessor] --> [Result Store]
+[Postprocessor] --> [API Gateway / Endpoint]
+[API Gateway / Endpoint] --> [LWC on Case Page]
+[API Gateway / Endpoint] --> [Message Queue]
+[Message Queue] --> [Retry / Dead-letter]
+[Result Store] --> [Metrics & Alerts]
+[Result Store] --> [Audit Logs]
+
+@enduml
