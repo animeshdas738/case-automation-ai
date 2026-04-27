@@ -1,0 +1,30 @@
+<template>
+    <lightning-card title="AI Case Summary" icon-name="custom:custom14">
+        <div class="slds-p-around_medium">
+            <template if:true={summaryData}>
+                <p><strong>Summary</strong></p>
+                <p>{summaryData.summary}</p>
+
+                <template if:true={summaryData.suggestedReplies}>
+                    <p><strong>Suggested Replies</strong></p>
+                    <template for:each={summaryData.suggestedReplies} for:item="r">
+                        <div key={r.body} class="slds-box slds-m-bottom_small">
+                            <p><em>{r.tone}</em></p>
+                            <p>{r.body}</p>
+                            <p>Confidence: {r.confidence}</p>
+                        </div>
+                    </template>
+                </template>
+            </template>
+
+            <template if:true={error}>
+                <div class="slds-text-color_error">{error}</div>
+            </template>
+
+            <div class="slds-m-top_small">
+                <lightning-button label="Generate Summary" onclick={handleGenerate} class="slds-m-right_small"></lightning-button>
+                <lightning-button label="Request Async" variant="brand" onclick={handleRequestAsync}></lightning-button>
+            </div>
+        </div>
+    </lightning-card>
+</template>
